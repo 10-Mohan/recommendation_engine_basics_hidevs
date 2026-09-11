@@ -146,3 +146,20 @@ This is a teaching project. Here are ideas to extend it:
 - **Cold Start** — Handle new users with no ratings or new items with no ratings (popularity baseline)
 - **Threshold Tuning** — Experiment with rating threshold (>= 4) and number of neighbors (top_n_neighbors) to optimize precision
 - **A/B Testing** — Compare different algorithms (user-user vs. item-item vs. hybrid) on real user engagement metrics
+
+## Scalability Notes
+
+The current similarity computation compares every user against every other user,
+making it O(n²) in the number of users — fine for small demo datasets like this one,
+but it won't scale to a real platform with millions of users. In production, this
+would typically be replaced with:
+- Matrix factorization (e.g. SVD, ALS) to learn compact user/item embeddings
+  instead of computing pairwise similarity directly
+- Approximate nearest-neighbor search (e.g. Locality-Sensitive Hashing / LSH) to
+  find similar users without comparing against everyone
+- Precomputed similarity indices, refreshed on a schedule rather than computed
+  live per request
+
+This project prioritizes clarity and correctness of the core algorithm over
+production-scale performance.
+
